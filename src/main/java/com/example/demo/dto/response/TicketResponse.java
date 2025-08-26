@@ -1,37 +1,29 @@
 package com.example.demo.dto.response;
 
-import java.time.Instant;
-
 import enums.Priority;
 import enums.TicketStatus;
-import jakarta.transaction.Transactional;
 import model.Ticket;
-import repository.TicketRepository;
 
-public record TicketResponse (
-		
-		
-		
-		Long id,
+public record TicketResponse(
+        Long id,
         String title,
         String description,
         Priority priority,
         TicketStatus status,
-        Long requesterId,
-        Long assigneeId,
         String category,
-        Instant createdAt)
-
-
-
-
-
-
-
-{
-
-	public static TicketResponse fromEntity(Ticket ticket) {
-		// TODO Auto-generated method stub
-		return null;
-	}}
-
+        Long requesterId,
+        Long assigneeId
+) {
+    public static TicketResponse fromEntity(Ticket ticket) {
+        return new TicketResponse(
+                ticket.getId(),
+                ticket.getTitle(),
+                ticket.getDescription(),
+                ticket.getPriority(),
+                ticket.getStatus(),
+                ticket.getCategory(),
+                ticket.getRequester() != null ? ticket.getRequester().getId() : null,
+                ticket.getAssignee() != null ? ticket.getAssignee().getId() : null
+        );
+    }
+}
