@@ -1,8 +1,8 @@
-package Model;
+package model;
 
 import java.util.Objects;
 
-import Enums.Role;
+import enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
