@@ -1,8 +1,8 @@
 package com.example.demo.dto.response;
 
-import enums.Priority;
-import enums.TicketStatus;
-import model.Ticket;
+import com.example.demo.enums.Priority;
+import com.example.demo.enums.TicketStatus;
+import com.example.demo.model.Ticket;
 
 public record TicketResponse(
         Long id,

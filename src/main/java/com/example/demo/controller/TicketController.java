@@ -1,4 +1,4 @@
-package controller;
+package com.example.demo.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.request.CreateTicketRequest;
 import com.example.demo.dto.request.UpdateTicketStatusRequest;
 import com.example.demo.dto.response.TicketResponse;
+import com.example.demo.service.TicketService;
 
 import jakarta.validation.Valid;
-import service.TicketService;
 
 @RestController
 @RequestMapping("/api/tickets")

@@ -1,17 +1,17 @@
-package service;
+package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.CreateTicketRequest;
 import com.example.demo.dto.request.UpdateTicketStatusRequest;
 import com.example.demo.dto.response.TicketResponse;
+import com.example.demo.enums.TicketStatus;
+import com.example.demo.model.Ticket;
+import com.example.demo.model.User;
+import com.example.demo.repository.TicketRepository;
+import com.example.demo.repository.UserRepository;
 
-import enums.TicketStatus;
 import jakarta.transaction.Transactional;
-import model.Ticket;
-import model.User;
-import repository.TicketRepository;
-import repository.UserRepository;
 
 @Service
 public class TicketService {

@@ -1,19 +1,9 @@
 package com.example.demo.dto.request;
 
-import enums.TicketStatus;
+import com.example.demo.enums.TicketStatus;
+
 import jakarta.validation.constraints.NotNull;
 
-public record UpdateTicketStatusRequest (
-        
-		
-		
-		
-		@NotNull
-        Long ticketId,
-
-        @NotNull
-        TicketStatus status
-) 
-
-
-{}
+public record UpdateTicketStatusRequest(
+        @NotNull TicketStatus status
+) {}

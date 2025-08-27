@@ -1,0 +1,12 @@
+2025-08-27 11:29:03.214359-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found (this database is empty); SQL statement:
+INSERT INTO users (id, name, email) VALUES (1, 'Carlinhos Tester', 'carlinhos.works@gmail.com') [42104-232]
+2025-08-27 11:30:19.335795-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found (this database is empty); SQL statement:
+INSERT INTO users (id, name, email) VALUES (1, 'Carlinhos Tester', 'carlinhos.works@gmail.com') [42104-232]
+2025-08-27 11:31:53.409826-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO [*]user (id, name, email) VALUES (1, 'Carlinhos Tester', 'carlinhos.works@gmail.com')"; expected "identifier"; SQL statement:
+INSERT INTO user (id, name, email) VALUES (1, 'Carlinhos Tester', 'carlinhos.works@gmail.com') [42001-232]
+2025-08-27 11:33:16.913460-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found (this database is empty); SQL statement:
+INSERT INTO users (id, name, email) VALUES (1, 'Carlinhos Tester', 'carlinhos.works@gmail.com') [42104-232]

@@ -1,6 +1,7 @@
 package com.example.demo.dto.request;
 
-import enums.Priority;
+import com.example.demo.enums.Priority;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

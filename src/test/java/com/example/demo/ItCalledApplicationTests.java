@@ -10,4 +10,19 @@ class ItCalledApplicationTests {
 	void contextLoads() {
 	}
 
+	
+	
+	class TicketServiceTest {
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
 }
