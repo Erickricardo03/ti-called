@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -21,9 +22,12 @@ public class Comment {
 	private Long id;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "ticket_id")
 	private Ticket ticket;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "author_id")
+
 	private User author;
 	
 	@Column(nullable = false, length = 4000)
