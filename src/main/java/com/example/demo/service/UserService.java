@@ -1,27 +1,30 @@
 package com.example.demo.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
+import com.example.demo.dto.response.UserResponse;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return UserResponse.fromEntity(user);
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserResponse::fromEntity)
+                .toList();
     }
 }

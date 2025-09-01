@@ -11,6 +11,7 @@ import com.example.demo.dto.request.CreateTicketRequest;
 import com.example.demo.dto.request.UpdateTicketStatusRequest;
 import com.example.demo.dto.response.TicketResponse;
 import com.example.demo.enums.Priority;
+import com.example.demo.enums.Role;
 import com.example.demo.enums.TicketStatus;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -28,9 +29,13 @@ public class TicketServiceTest {
 
     @Test
     void shouldCreateTicket() {
-        User user = new User();
-        user.setName("Carlinhos");
-        user.setEmail("carlinhos.works@gmail.com");
+        User user = User.builder()
+                .name("Carlinhos")
+                .email("carlinhos.works@gmail.com")
+                .password("123456")   
+                .role(Role.END_USER)  
+                .build();
+
         userRepository.save(user);
 
         CreateTicketRequest request = new CreateTicketRequest(
@@ -42,18 +47,22 @@ public class TicketServiceTest {
                 "Software"
         );
 
-        TicketResponse response = ticketService.create(request);
+        TicketResponse response = ticketService.createTicket(request);
 
         assertThat(response).isNotNull();
-        assertThat(response.title()).isEqualTo("Erro no sistema");
-        assertThat(response.status()).isEqualTo(TicketStatus.OPEN);
+        assertThat(response.getTitle()).isEqualTo("Erro no sistema");
+        assertThat(response.getStatus()).isEqualTo(TicketStatus.OPEN);
     }
 
     @Test
     void shouldUpdateTicketStatus() {
-        User requester = new User();
-        requester.setName("Carlinhos");
-        requester.setEmail("carlinhos.works@gmail.com");
+        User requester = User.builder()
+                .name("Carlinhos")
+                .email("carlinhos.works@gmail.com")
+                .password("123456")  
+                .role(Role.END_USER)  
+                .build();
+
         userRepository.save(requester);
 
         CreateTicketRequest request = new CreateTicketRequest(
@@ -65,12 +74,13 @@ public class TicketServiceTest {
                 "Backend"
         );
 
-        TicketResponse created = ticketService.create(request);
+        TicketResponse created = ticketService.createTicket(request);
 
-        UpdateTicketStatusRequest updateRequest = new UpdateTicketStatusRequest(TicketStatus.IN_PROGRESS);
+        UpdateTicketStatusRequest updateRequest =
+                new UpdateTicketStatusRequest(TicketStatus.IN_PROGRESS);
 
-        TicketResponse updated = ticketService.updateStatus(created.id(), updateRequest);
+        TicketResponse updated = ticketService.updateTicketStatus(created.getId(), updateRequest);
 
-        assertThat(updated.status()).isEqualTo(TicketStatus.IN_PROGRESS);
+        assertThat(updated.getStatus()).isEqualTo(TicketStatus.IN_PROGRESS);
     }
 }

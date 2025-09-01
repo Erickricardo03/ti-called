@@ -1,9 +1,14 @@
 package com.example.demo.dto.request;
 
 import com.example.demo.enums.TicketStatus;
-
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
-public record UpdateTicketStatusRequest(
-        @NotNull TicketStatus status
-) {}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateTicketStatusRequest {
+
+    @NotNull
+    private TicketStatus status;
+}

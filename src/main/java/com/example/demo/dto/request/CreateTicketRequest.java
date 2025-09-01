@@ -1,35 +1,30 @@
 package com.example.demo.dto.request;
 
 import com.example.demo.enums.Priority;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.*;
 
-public record CreateTicketRequest (  
-		
-		
-		
-		@NotBlank @Size(max = 120)
-        String title,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class CreateTicketRequest {
 
-        @NotBlank @Size(max = 4000)
-        String description,
+    @NotBlank
+    private String title;
 
-        @NotNull
-        Priority priority,
+    @NotBlank
+    private String description;
 
-        @NotNull
-        Long requesterId,
+    @NotNull
+    private Priority priority;
 
-       
-        Long assigneeId,
+    @NotNull
+    private Long requesterId;
 
-        @Size(max = 60)
-        String category) 
+    private Long assignedUserId;
 
-
-
-
-
-{}
+    @NotBlank
+    private String category;
+}
