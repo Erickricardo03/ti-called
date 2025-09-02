@@ -4,44 +4,49 @@ import com.example.demo.dto.request.CreateTicketRequest;
 import com.example.demo.dto.request.UpdateTicketStatusRequest;
 import com.example.demo.dto.response.TicketResponse;
 import com.example.demo.enums.TicketStatus;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Ticket;
 import com.example.demo.model.User;
 import com.example.demo.repository.TicketRepository;
 import com.example.demo.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@Transactional
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
 
-    public TicketResponse createTicket(CreateTicketRequest request) {
-        User requester = userRepository.findById(request.getRequesterId())
-                .orElseThrow(() -> new EntityNotFoundException("Requester not found"));
-
-        Ticket ticket = Ticket.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .priority(request.getPriority())
-                .status(TicketStatus.OPEN)
-                .category(request.getCategory())
-                .requester(requester)
-                .build();
-
-        Ticket saved = ticketRepository.save(ticket);
-        return TicketResponse.fromEntity(saved);
+    public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
+        this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
     }
 
-    public TicketResponse getTicketById(Long id) {
-        Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ticket not found"));
-        return TicketResponse.fromEntity(ticket);
+    public TicketResponse createTicket(CreateTicketRequest request) {
+        User requester = userRepository.findById(request.getRequesterId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + request.getRequesterId()));
+        
+        User assignee = null;
+        if (request.getAssigneeId() != null) {
+            assignee = userRepository.findById(request.getAssigneeId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + request.getAssigneeId()));
+        }
+
+        Ticket ticket = new Ticket();
+        ticket.setTitle(request.getTitle());
+        ticket.setDescription(request.getDescription());
+        ticket.setPriority(request.getPriority());
+        ticket.setCategory(request.getCategory());
+        ticket.setRequester(requester);
+        ticket.setAssignee(assignee);
+        ticket.setStatus(TicketStatus.OPEN);
+
+        return TicketResponse.fromEntity(ticketRepository.save(ticket));
     }
 
     public List<TicketResponse> getAllTickets() {
@@ -51,13 +56,24 @@ public class TicketService {
                 .toList();
     }
 
+    public TicketResponse getTicketById(Long id) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket não encontrado com ID: " + id));
+        return TicketResponse.fromEntity(ticket);
+    }
+
     public TicketResponse updateTicketStatus(Long id, UpdateTicketStatusRequest request) {
         Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ticket not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket não encontrado com ID: " + id));
 
-        ticket.setStatus(request.getStatus());
-        Ticket updated = ticketRepository.save(ticket);
+        ticket.setStatus(request.status());
+        return TicketResponse.fromEntity(ticketRepository.save(ticket));
+    }
 
-        return TicketResponse.fromEntity(updated);
+    public void deleteTicket(Long id) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket não encontrado com ID: " + id));
+
+        ticketRepository.delete(ticket);
     }
 }

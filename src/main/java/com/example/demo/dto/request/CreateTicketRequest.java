@@ -23,7 +23,7 @@ public class CreateTicketRequest {
     @NotNull
     private Long requesterId;
 
-    private Long assignedUserId;
+    private Long assigneeId;
 
     @NotBlank
     private String category;

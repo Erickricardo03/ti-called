@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users") // cuidado: "user" é palavra reservada em alguns bancos
+@Table(name = "users") 
 @Getter
 @Setter
 @NoArgsConstructor
