@@ -35,9 +35,10 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + id));
     }
 
-    // Criar novo
+    // Criar novo usuário
     public UserResponse createUser(UserRequest request) {
-        Role role = Role.valueOf(request.getRole().toUpperCase());
+        String roleStr = request.getRole() != null ? request.getRole() : "USER";
+        Role role = Role.valueOf(roleStr.toUpperCase());
 
         User user = User.builder()
                 .name(request.getName())
@@ -49,7 +50,7 @@ public class UserService {
         return UserResponse.fromEntity(userRepository.save(user));
     }
 
-    // ✅ Atualizar existente
+    // Atualizar usuário existente
     public UserResponse updateUser(Long id, UserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + id));
@@ -57,12 +58,15 @@ public class UserService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-        user.setRole(Role.valueOf(request.getRole().toUpperCase()));
+
+        String roleStr = request.getRole() != null ? request.getRole() : "USER";
+        Role role = Role.valueOf(roleStr.toUpperCase());
+        user.setRole(role);
 
         return UserResponse.fromEntity(userRepository.save(user));
     }
 
-    // Deletar
+    // Deletar usuário
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + id));
@@ -70,4 +74,3 @@ public class UserService {
         userRepository.delete(user);
     }
 }
-
