@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder; 
 
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.UserResponse;
@@ -15,9 +16,12 @@ import com.example.demo.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    // 👇 injeta UserRepository e PasswordEncoder
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Buscar todos
@@ -37,13 +41,13 @@ public class UserService {
 
     // Criar novo usuário
     public UserResponse createUser(UserRequest request) {
-        String roleStr = request.getRole() != null ? request.getRole() : "USER";
+        String roleStr = request.getRole() != null ? request.getRole() : "END_USER"; // 👈 padrão
         Role role = Role.valueOf(roleStr.toUpperCase());
 
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword())) // 👈 senha codificada
                 .role(role)
                 .build();
 
@@ -57,9 +61,13 @@ public class UserService {
 
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
 
-        String roleStr = request.getRole() != null ? request.getRole() : "USER";
+        // 👇 só atualiza se a senha for informada
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        String roleStr = request.getRole() != null ? request.getRole() : "END_USER";
         Role role = Role.valueOf(roleStr.toUpperCase());
         user.setRole(role);
 
@@ -74,3 +82,4 @@ public class UserService {
         userRepository.delete(user);
     }
 }
+
