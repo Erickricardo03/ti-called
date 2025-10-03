@@ -7,10 +7,10 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // 👈 importante
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import com.example.demo.security.CustomUserDetailsService; // 👈 importa aqui
+import com.example.demo.security.CustomUserDetailsService; 
 
 
 @Configuration
@@ -22,13 +22,11 @@ public class SecurityConfig {
 		this.customUserDetailsService = customUserDetailsService;
 	}
 
-	// 👇 encoder para senhas
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
-	// 👇 provider que usa seu UserDetailsService
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -43,15 +41,13 @@ public class SecurityConfig {
 		return config.getAuthenticationManager();
 	}
 
-	// 👇 configuração de segurança da aplicação
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable()) // desativa CSRF para testes com Postman/Angular
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/users/**", "/api/tickets/**").permitAll() // rotas
-																											// liberadas
-						.anyRequest().authenticated())
-				.formLogin(form -> form.disable()); // se você usa JWT/Angular, desativa formLogin
+	    http.csrf(csrf -> csrf.disable()) 
+	        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()) 
+	        .formLogin(form -> form.disable()); 
 
-		return http.build();
+	    return http.build();
 	}
+
 }

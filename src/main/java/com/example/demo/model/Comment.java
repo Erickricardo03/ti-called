@@ -31,7 +31,7 @@ public class Comment {
     private User user;
     
 
-    @CreationTimestamp // gera automaticamente na inserção
+    @CreationTimestamp 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
     

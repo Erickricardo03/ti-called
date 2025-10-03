@@ -21,11 +21,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com email: " + email));
 
-        // Aqui convertemos teu User (entidade) em um objeto do Spring Security
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
-                .password(user.getPassword()) // senha já codificada com BCrypt
-                .roles(user.getRole().name()) // exemplo: END_USER, ADMIN
+                .password(user.getPassword()) 
+                .roles(user.getRole().name()) 
                 .build();
     }
 }
