@@ -5,15 +5,19 @@ import com.example.demo.dto.request.UpdateTicketStatusRequest;
 import com.example.demo.dto.response.TicketResponse;
 import com.example.demo.enums.TicketStatus;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.Ticket;
+import com.example.demo.model.Ticket; 
 import com.example.demo.model.User;
-import com.example.demo.repository.TicketRepository;
+import com.example.demo.repository.TicketRepository; 
 import com.example.demo.repository.UserRepository;
 
+import org.springframework.security.core.Authentication; 
+import org.springframework.security.core.context.SecurityContextHolder; 
+import org.springframework.security.authentication.AnonymousAuthenticationToken; 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional; 
 
 @Service
 @Transactional
@@ -43,15 +47,43 @@ public class TicketService {
         ticket.setPriority(request.getPriority());
         ticket.setCategory(request.getCategory());
         ticket.setRequester(requester);
-        ticket.setAssignee(assignee);
+        ticket.setAssignee(assignee); 
         ticket.setStatus(TicketStatus.OPEN);
 
         return TicketResponse.fromEntity(ticketRepository.save(ticket));
     }
 
+   
     public List<TicketResponse> getAllTickets() {
-        return ticketRepository.findAll()
-                .stream()
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<Ticket> tickets;
+
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated()) {
+            System.out.println("Modo Portfólio Ativado: Retornando todos os tickets.");
+            tickets = ticketRepository.findAll();
+            
+        } else {
+            
+            String username = authentication.getName();
+            
+            Optional<User> userOptional = userRepository.findByEmail(username);
+            
+            if (userOptional.isEmpty()) {
+                tickets = ticketRepository.findAll(); 
+            } else {
+                User user = userOptional.get();
+
+                boolean isAdmin = user.getRole().name().equals("ROLE_ADMIN"); 
+
+                if (isAdmin) {
+                    tickets = ticketRepository.findAll();
+                } else {
+                    tickets = ticketRepository.findByRequester(user); 
+                }
+            }
+        }
+        
+        return tickets.stream()
                 .map(TicketResponse::fromEntity)
                 .toList();
     }
